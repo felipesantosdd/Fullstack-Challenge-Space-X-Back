@@ -1,12 +1,15 @@
-import { Request, request } from "express";
 import LauncherService from "../../services/launchs.Service";
 import mongoose from "mongoose";
+import dotenv from 'dotenv'
 
 describe("Get All Launch", () => {
 
     beforeAll(() => {
-        const dbURL =  'mongodb://localhost:27017/spaceX';
-        mongoose.connect(dbURL)
+        dotenv.config();
+        const { DB_HOST, DB_PORT, DB_NAME } = process.env
+        
+        mongoose.connect(
+            `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`)
             .then(() => {
                 console.log('Connected to database');
             })

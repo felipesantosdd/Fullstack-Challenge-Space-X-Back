@@ -1,4 +1,4 @@
 "use strict"
 import app from "./app"
-
-app.listen(3333)
+const { SERVER_PORT } = process.env
+app.listen(SERVER_PORT || 3000)

@@ -1,0 +1,36 @@
+version: "2.2"
+
+services:
+  db:
+    image: mongo:latest
+    env_file: .env
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodata:/data/db
+
+  migration:
+    build: .
+    env_file: .env
+    command: bash -c 'while !</dev/tcp/db/27017; do sleep 1; done; python manage.py migrate'
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+
+  web:
+    build: .
+    env_file: .env
+    command: bash -c 'while !</dev/tcp/db/27017; do sleep 1; done; python manage.py runserver 0.0.0.0:8000'
+    volumes:
+      - .:/code
+    stdin_open: true
+    tty: true
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - migration
+
+volumes:
+  mongodata:

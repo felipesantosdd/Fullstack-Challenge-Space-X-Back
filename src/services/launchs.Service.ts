@@ -10,11 +10,12 @@ class LauncherService {
         await Launch.deleteMany({});
 
         launchesJson.forEach((launch: LauncherInterface) => Launch.create(launch));
+        console.log('Dados de lançamentos obtidos com sucesso');
+        
 
         notifier.notify({
-            title: 'Atualização',
+            title: 'Notificação',
             message: 'Dados de lançamentos obtidos com sucesso!',
-           
         });
 
     }

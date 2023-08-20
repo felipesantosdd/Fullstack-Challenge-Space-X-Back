@@ -4,9 +4,12 @@ import mongoose from 'mongoose'
 import routes from './routes/launches.Routes'
 import cron from 'node-cron'
 import LaunchesController from './controllers/LaunchesController'
+import dotenv from 'dotenv'
+
 
 class App {
     public express: express.Application
+
 
 
     public constructor() {
@@ -27,8 +30,11 @@ class App {
     }
 
     private setupDatabase(): void {
-        const dbURL = process.env.DB_URL || 'mongodb://localhost:27017/spaceX';
-        mongoose.connect(dbURL)
+        dotenv.config();
+        const { DB_HOST, DB_PORT, DB_NAME } = process.env
+        mongoose.connect(
+            `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`
+        )
             .then(() => {
                 console.log('Connected to database');
             })
