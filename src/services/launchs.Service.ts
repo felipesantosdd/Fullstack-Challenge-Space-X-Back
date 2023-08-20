@@ -13,17 +13,20 @@ class LauncherService {
         console.log('Dados de lançamentos obtidos com sucesso');
     }
 
-    public async getAll(req: Request) {
-        const searchQuery = req.query.search as string | undefined;
-        const limit = parseInt(req.query.limit as string) || 10;
-        const page = parseInt(req.query.page as string) || 1;
+    public async getAll(
+        limit: number,
+        page:number,
+        searchQuery: string | undefined,
+    ) {
+       
         const skip = (page - 1) * limit;
 
         let query: any = {};
-
-        if (searchQuery) {
-            query = { $text: { $search: searchQuery } };
-        }
+       
+         if (searchQuery) {
+             query = { $name: { $search: searchQuery } };
+             console.log(query.$text.$search);
+         }
 
         const totalDocs = await Launch.countDocuments(query);
 

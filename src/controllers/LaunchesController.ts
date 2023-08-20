@@ -26,8 +26,11 @@ class LauncherController {
 
     public async getAll(req: Request, res: Response): Promise<Response> {       
         try {
-      
-            const response = await LauncherService.getAll(req)
+            const searchQuery = req.query.search as string | undefined;
+            const limit = parseInt(req.query.limit as string) || 10;
+            const page = parseInt(req.query.page as string) || 1;
+
+            const response = await LauncherService.getAll(limit, page, searchQuery,)
 
             return res.status(200).json(response);
         } catch (error) {
