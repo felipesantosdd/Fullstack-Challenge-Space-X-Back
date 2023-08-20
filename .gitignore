@@ -2,3 +2,5 @@ node_modules
 yarn.lock
 .eslintrc.js
 yarn-error.log
+backage.json
+jest.config.ts
