@@ -1,6 +1,6 @@
 import { LauncherInterface } from "../schemas/Launcher";
 import Launch from '../schemas/Launcher';
-import { Request } from 'express';
+import notifier from "node-notifier"
 
 class LauncherService {
     public async synchronize(): Promise<void> {
@@ -10,7 +10,13 @@ class LauncherService {
         await Launch.deleteMany({});
 
         launchesJson.forEach((launch: LauncherInterface) => Launch.create(launch));
-        console.log('Dados de lançamentos obtidos com sucesso');
+
+        notifier.notify({
+            title: 'Atualização',
+            message: 'Dados de lançamentos obtidos com sucesso!',
+           
+        });
+
     }
 
     public async getAll(
