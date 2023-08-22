@@ -3,6 +3,7 @@ import Launch from '../schemas/Launcher';
 import notifier from "node-notifier"
 
 class LauncherService {
+
     public async synchronize(): Promise<void> {
         const launches = await fetch('https://api.spacexdata.com/v5/launches');
         const launchesJson: LauncherInterface[] = await launches.json();
@@ -18,6 +19,8 @@ class LauncherService {
             message: 'Dados de lançamentos obtidos com sucesso!',
         });
 
+
+        return
     }
 
     public async getRockets(): Promise<any> {
@@ -72,43 +75,16 @@ class LauncherService {
     public async getStats() {
         const launches = await Launch.find();
 
-        let successCount = 0;
-        let failureCount = 0;
-        const launchCounts: Record<string, { count: number; dates: string[] }> = {};
+        const response = []
+        launches.map((launch) => {
+            response.push({
+                rocket:  launch.rocket,
+                sucess: launch.success,
+                date: launch.date_local
+            })
+        })
 
-        console.log(launches);
-
-        for (const launch of launches) {
-            if (launch.success) {
-                successCount++;
-            } else {
-                failureCount++;
-            }
-
-            if (launch.rocket in launchCounts) {
-                launchCounts[launch.rocket].count++;
-                launchCounts[launch.rocket].dates.push(launch.date_utc);
-            } else {
-                launchCounts[launch.rocket] = {
-                    count: 1,
-                    dates: [launch.date_utc],
-                };
-            }
-        }
-
-        const rockets = Object.keys(launchCounts).map((rocket) => ({
-            id: rocket,
-            launchs: launchCounts[rocket].count,
-            dates: launchCounts[rocket].dates,
-        }));
-
-        const stats = {
-            success: successCount,
-            failure: failureCount,
-            launchCounts: rockets,
-        };
-
-        return stats;
+        return response;
     }
 
 }

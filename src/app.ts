@@ -49,8 +49,7 @@ class App {
     }
 
     private scheduleCron(): void {
-        // cron.schedule('0 9 * * *', () => {
-        cron.schedule('0 14 * * *', () => {
+        cron.schedule('0 9 * * *', () => {
             LauncherService.synchronize();
         });
     }

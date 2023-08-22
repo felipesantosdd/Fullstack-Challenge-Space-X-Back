@@ -10,6 +10,15 @@ class LauncherController {
         });
     }
 
+    public async synchronizeController(req: Request, res: Response):Promise<Response> {
+        try {
+            await LauncherService.synchronize()
+            return res.status(200).json(`message: Atualizado`)
+        } catch (error) {
+            return res.status(500).json({ error: 'Failed to retrieve launches.' });
+        }
+    }
+
     public async getAll(req: Request, res: Response): Promise<Response> {       
         try {
             const searchQuery = req.query.search as string | undefined;

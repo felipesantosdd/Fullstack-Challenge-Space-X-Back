@@ -56,17 +56,12 @@ describe("Get All Launch", () => {
         expect(response.results[0].name).toEqual(busca);
     });
 
+
     it('Verifica se é possivel buscar os status de lançamentos', async () => {
         const response = await LauncherService.getStats()
-        expect(response).toHaveProperty("success", expect.any(Number));
-        expect(response).toHaveProperty("failure", expect.any(Number));
-        expect(response).toHaveProperty("launchCounts", expect.arrayContaining([
-            expect.objectContaining({
-                id: expect.any(String),
-                launchs: expect.any(Number)
-            }),
-        ]));
-    })
+        expect(response[0]).toHaveProperty("sucess", expect.any(Boolean));
+        expect(response[0]).toHaveProperty("rocket", expect.any(String))
+})
 
 
 });
