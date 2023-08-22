@@ -4,4 +4,5 @@ yarn.lock
 yarn-error.log
 backage.json
 jest.config.ts
+package-lock.json
 dist/

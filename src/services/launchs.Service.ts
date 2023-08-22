@@ -20,6 +20,12 @@ class LauncherService {
 
     }
 
+    public async getRockets(): Promise<any> {
+        const rockets = await fetch('https://api.spacexdata.com/v4/rockets');    
+        const rocketsData = await rockets.json();
+        return rocketsData
+    }
+
     public async getAll(
         limit: number,
         page:number,
@@ -29,10 +35,10 @@ class LauncherService {
         const skip = (page - 1) * limit;
 
         let query: any = {};
+
        
          if (searchQuery) {
-             query = { $name: { $search: searchQuery } };
-             console.log(query.$text.$search);
+             query = { name: { $regex: searchQuery, $options: 'i' } };
          }
 
         const totalDocs = await Launch.countDocuments(query);
@@ -68,7 +74,9 @@ class LauncherService {
 
         let successCount = 0;
         let failureCount = 0;
-        const launchCounts: Record<string, number> = {}
+        const launchCounts: Record<string, { count: number; dates: string[] }> = {};
+
+        console.log(launches);
 
         for (const launch of launches) {
             if (launch.success) {
@@ -78,17 +86,21 @@ class LauncherService {
             }
 
             if (launch.rocket in launchCounts) {
-                launchCounts[launch.rocket]++;
+                launchCounts[launch.rocket].count++;
+                launchCounts[launch.rocket].dates.push(launch.date_utc);
             } else {
-                launchCounts[launch.rocket] = 1;
+                launchCounts[launch.rocket] = {
+                    count: 1,
+                    dates: [launch.date_utc],
+                };
             }
         }
 
         const rockets = Object.keys(launchCounts).map((rocket) => ({
             id: rocket,
-            launchs: launchCounts[rocket],
+            launchs: launchCounts[rocket].count,
+            dates: launchCounts[rocket].dates,
         }));
-
 
         const stats = {
             success: successCount,
@@ -99,7 +111,6 @@ class LauncherService {
         return stats;
     }
 
-    
 }
 
 export default new LauncherService()

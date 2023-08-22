@@ -50,11 +50,11 @@ describe("Get All Launch", () => {
     })
 
 
-    it('Verifica se é possivel buscar um lançamento especifico', async () => {
-        const busca = 'tesla'
-        const response = await LauncherService.getAll(10, 10, 'tesla')
-        expect(response.page).toEqual(busca)
-    })
+    it('Verifica se é possível buscar um lançamento específico', async () => {
+        const busca = 'RazakSat';
+        const response = await LauncherService.getAll(10, 1, busca);
+        expect(response.results[0].name).toEqual(busca);
+    });
 
     it('Verifica se é possivel buscar os status de lançamentos', async () => {
         const response = await LauncherService.getStats()

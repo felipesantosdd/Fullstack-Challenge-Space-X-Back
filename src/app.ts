@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import routes from './routes/launches.Routes'
 import cron from 'node-cron'
 import LaunchesController from './controllers/LaunchesController'
+import LauncherService from './services/launchs.Service'
 import dotenv from 'dotenv'
 
 
@@ -48,8 +49,9 @@ class App {
     }
 
     private scheduleCron(): void {
-        cron.schedule('* * * * *', () => {
-            LaunchesController.synchronize();
+        // cron.schedule('0 9 * * *', () => {
+        cron.schedule('0 14 * * *', () => {
+            LauncherService.synchronize();
         });
     }
 

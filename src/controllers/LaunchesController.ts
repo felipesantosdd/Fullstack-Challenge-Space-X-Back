@@ -10,20 +10,6 @@ class LauncherController {
         });
     }
 
-    public async synchronize(req: Request, res: Response): Promise<Response | void> {
-        try {
-            await LauncherService.synchronize()
-
-            return res.status(200).json({ message: 'Dados de lançamentos obtidos com sucesso.' });
-        } catch (error) {
-            if (res !== undefined) {
-                return res.status(500).json({ error: 'Failed to create launcher.' });
-            } else {
-                return;
-            }
-        }
-    }
-
     public async getAll(req: Request, res: Response): Promise<Response> {       
         try {
             const searchQuery = req.query.search as string | undefined;
@@ -54,6 +40,15 @@ class LauncherController {
             return res.status(200).json(stats);
         } catch (error) {
             return res.status(500).json({ error: 'Failed to get status.' });
+        }
+    }
+
+    public async getRockets(req: Request, res: Response): Promise<Response> {
+        try {           
+            const rockets = await LauncherService.getRockets()
+            return res.status(200).json(rockets);
+        } catch (error) {
+            return res.status(500).json({ error: 'Failed to get rockets.' });
         }
     }
 }
